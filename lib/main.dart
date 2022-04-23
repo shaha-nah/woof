@@ -3,7 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:woof/widget/button_widget.dart';
 
+import 'package:wakelock/wakelock.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Wakelock.enable();
+  
   runApp(Woof());
 }
 
@@ -30,6 +36,7 @@ class _WoofState extends State<Woof> {
         setState(() => seconds--);
       } else {
         stopTimer(false);
+        FlutterRingtonePlayer.playNotification();
       }
     });
   }
@@ -96,21 +103,21 @@ class _WoofState extends State<Woof> {
   }
 
   Widget buildTimer() => SizedBox(
-    width: 200,
-    height: 200,
-    child: Stack(
-      fit: StackFit.expand,
-      children: [
-        CircularProgressIndicator(
-          value: seconds / maxSeconds,
-          strokeWidth: 12,
-          valueColor: AlwaysStoppedAnimation(Colors.black),
-          backgroundColor: Colors.blueAccent,
+        width: 200,
+        height: 200,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            CircularProgressIndicator(
+              value: seconds / maxSeconds,
+              strokeWidth: 12,
+              valueColor: AlwaysStoppedAnimation(Colors.black),
+              backgroundColor: Colors.blueAccent,
+            ),
+            Center(child: buildTime())
+          ],
         ),
-        Center(child: buildTime())
-      ],
-    ),
-  );
+      );
 
   Widget buildTime() {
     return Text(
